@@ -14,17 +14,17 @@
 ## 技术栈
 
 - Next.js - React框架
-- TypeScript - 类型安全的JavaScript
+- TypeScript - JavaScript类型扩展
 - Chakra UI - 用户界面组件库
 - Axios - HTTP客户端
 - Sandshrew API - 比特币区块链数据源
 
-## 安装指南
+## 安装与运行指南
 
 ### 前提条件
 
 - Node.js (v16+)
-- npm 或 yarn
+- npm 或 yarn (推荐使用yarn)
 
 ### 安装步骤
 
@@ -38,12 +38,14 @@ cd alkanes-explorer
 2. 安装依赖:
 
 ```bash
-npm install
-# 或
+# 使用yarn（推荐）
 yarn install
+
+# 或使用npm
+npm install
 ```
 
-3. 配置环境变量:
+3. 配置环境变量 (可选):
 
 创建`.env.local`文件并填入以下内容:
 
@@ -52,53 +54,69 @@ NEXT_PUBLIC_SANDSHREW_API_URL=https://mainnet.sandshrew.io/v2/lasereyes
 NEXT_PUBLIC_SANDSHREW_PROJECT_ID=你的项目ID
 ```
 
-4. 启动开发服务器:
+注意：如果不配置环境变量，系统将使用默认值，仍然可以运行，但某些API功能可能受限。
+
+### 运行方法
+
+有两种方式运行应用：
+
+#### 1. 开发模式 (带热重载)
 
 ```bash
-npm run dev
-# 或
+# 使用yarn
 yarn dev
+
+# 或使用npm
+npm run dev
 ```
 
-## 使用方法
+#### 2. 生产模式
 
-### 本地访问
-
-启动服务后，访问 http://localhost:3000 即可打开监控面板。
-
-### 生产环境部署
-
-1. 构建生产版本:
+首先构建应用:
 
 ```bash
-npm run build
-# 或
+# 使用yarn
 yarn build
+
+# 或使用npm
+npm run build
 ```
 
-2. 启动生产服务:
+然后启动服务:
 
 ```bash
-npm start
-# 或
+# 使用yarn
 yarn start
+
+# 或使用npm
+npm start
 ```
 
-### 公网访问设置
+### 访问应用
 
-如需通过公网IP让他人访问监控面板（只读模式），请修改`package.json`中的启动命令:
+启动服务后，打开浏览器访问 http://localhost:3000 即可使用监控面板。
 
-```json
-"scripts": {
-  "start": "next start -H 0.0.0.0 -p 3000"
-}
+### 常见问题解决
+
+如果遇到TypeScript或React相关错误，尝试以下方法:
+
+1. 确保React和React-DOM版本为18.2.0:
+```bash
+yarn add react@18.2.0 react-dom@18.2.0
 ```
 
-这将使服务绑定到所有网络接口，通过服务器的公网IP可以访问。
+2. 降级TypeScript版本:
+```bash
+yarn add typescript@5.1.6 --dev
+```
 
-#### 安全配置
-
-为确保他人只能查看而不能操作，系统已内置只读模式，他人通过公网IP访问时只能查看数据，不能执行交易或更改设置。
+3. 如果仍有问题，尝试禁用TypeScript错误检查:
+在`next.config.js`中添加:
+```javascript
+typescript: {
+  ignoreBuildErrors: true,
+},
+```
 
 ## 功能说明
 
