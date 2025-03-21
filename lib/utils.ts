@@ -63,6 +63,18 @@ export const truncateString = (str: string, start: number = 6, end: number = 4):
   return `${str.substring(0, start)}...${str.substring(str.length - end)}`;
 };
 
+// 格式化BTC金额 (与formatBTC类似但有不同格式)
+export const formatBtcAmount = (satoshis: number, precision: number = 8): string => {
+  return (satoshis / 100000000).toFixed(precision) + ' BTC';
+};
+
+// 截断中间部分的字符串显示 (用于显示长txid或地址)
+export const truncateMiddle = (str: string, startChars: number = 6, endChars: number = 4): string => {
+  if (!str) return '';
+  if (str.length <= startChars + endChars) return str;
+  return `${str.substring(0, startChars)}...${str.substring(str.length - endChars)}`;
+};
+
 // 计算交易成功概率基于Gas费率和网络拥堵情况
 export const calculateTxSuccessProbability = (
   feeRate: number,

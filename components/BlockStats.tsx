@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import { getBlockCount, getBlockByHeight } from '../lib/api';
 import LoadingSpinner from './LoadingSpinner';
 
@@ -6,13 +6,13 @@ interface BlockStatsProps {
   className?: string;
 }
 
-export default function BlockStats({ className = '' }: BlockStatsProps) {
-  const [blockCount, setBlockCount] = useState<number | null>(null);
-  const [lastBlock, setLastBlock] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+const BlockStats = ({ className = '' }: BlockStatsProps) => {
+  const [blockCount, setBlockCount] = React.useState<number | null>(null);
+  const [lastBlock, setLastBlock] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<string | null>(null);
   
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchBlockStats = async () => {
       try {
         setLoading(true);
@@ -94,4 +94,6 @@ export default function BlockStats({ className = '' }: BlockStatsProps) {
       </div>
     </div>
   );
-} 
+};
+
+export default BlockStats; 

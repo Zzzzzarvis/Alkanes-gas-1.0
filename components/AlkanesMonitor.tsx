@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import { 
   Box, 
   Heading, 
@@ -34,6 +34,7 @@ import {
 } from '@chakra-ui/react';
 import { SearchIcon, RepeatIcon } from '@chakra-ui/icons';
 import axios from 'axios';
+import { formatTimestamp, truncateMiddle } from '../lib/utils';
 
 // 定义类型
 interface AlkanesTx {
@@ -65,16 +66,16 @@ interface AddressDetails {
   alkanesTransactions: AlkanesTx[];
 }
 
-const AlkanesMonitor: React.FC = () => {
+const AlkanesMonitor = () => {
   // 状态管理
-  const [latestBlock, setLatestBlock] = useState<BlockDetails | null>(null);
-  const [addressData, setAddressData] = useState<AddressDetails | null>(null);
-  const [searchAddress, setSearchAddress] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [stats, setStats] = useState<any>(null);
-  const [refreshInterval, setRefreshInterval] = useState<NodeJS.Timeout | null>(null);
-  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [latestBlock, setLatestBlock] = React.useState<BlockDetails | null>(null);
+  const [addressData, setAddressData] = React.useState<AddressDetails | null>(null);
+  const [searchAddress, setSearchAddress] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState('');
+  const [stats, setStats] = React.useState<any>(null);
+  const [refreshInterval, setRefreshInterval] = React.useState<NodeJS.Timeout | null>(null);
+  const [autoRefresh, setAutoRefresh] = React.useState(false);
   
   const toast = useToast();
   const bgColor = useColorModeValue('white', 'gray.800');
@@ -152,14 +153,9 @@ const AlkanesMonitor: React.FC = () => {
     }
   };
   
-  // 格式化时间戳
-  const formatTimestamp = (timestamp: number): string => {
-    return new Date(timestamp * 1000).toLocaleString();
-  };
-  
   // 格式化交易ID (缩短显示)
   const formatTxid = (txid: string): string => {
-    return `${txid.substring(0, 8)}...${txid.substring(txid.length - 8)}`;
+    return truncateMiddle(txid, 8, 8);
   };
   
   // 切换自动刷新
@@ -238,7 +234,7 @@ const AlkanesMonitor: React.FC = () => {
   };
   
   // 组件挂载时获取数据
-  useEffect(() => {
+  React.useEffect(() => {
     fetchLatestBlockData();
     fetchAlkanesStats();
     
@@ -527,12 +523,12 @@ const AlkanesMonitor: React.FC = () => {
                       
                       <Stat>
                         <StatLabel>总Alkanes交易</StatLabel>
-                        <StatNumber>{stats.summary.totalAlkanesTransactions}</StatNumber>
+                        <StatNumber>{stats.summary?.totalAlkanesTransactions || 0}</StatNumber>
                       </Stat>
                       
                       <Stat>
                         <StatLabel>平均Gas (sat/vB)</StatLabel>
-                        <StatNumber>{stats.summary.averageGasPerTransaction}</StatNumber>
+                        <StatNumber>{stats.summary?.averageGasPerTransaction || 0}</StatNumber>
                       </Stat>
                     </HStack>
                     
@@ -549,13 +545,13 @@ const AlkanesMonitor: React.FC = () => {
                           </Tr>
                         </Thead>
                         <Tbody>
-                          {stats.recentBlocks.slice(0, 10).map((block: any) => (
+                          {stats.recentBlocks && stats.recentBlocks.slice(0, 10).map((block: any) => (
                             <Tr key={block.height}>
                               <Td>{block.height}</Td>
                               <Td>{formatTimestamp(block.time)}</Td>
-                              <Td isNumeric>{block.txCount}</Td>
-                              <Td isNumeric>{block.alkanesTxCount}</Td>
-                              <Td isNumeric>{block.gasUsed.toFixed(2)}</Td>
+                              <Td isNumeric>{block.txCount || 0}</Td>
+                              <Td isNumeric>{block.alkanesTxCount || 0}</Td>
+                              <Td isNumeric>{(block.gasUsed || 0).toFixed(2)}</Td>
                             </Tr>
                           ))}
                         </Tbody>
